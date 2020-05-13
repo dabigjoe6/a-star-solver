@@ -17,6 +17,7 @@ function App() {
 
 	const [currentSpeed, setCurrentSpeed] = useState(20)
 	const [isSolving, setIsSolving] = useState(false)
+	const [isInstantSolving, setIsInstantSolving] = useState(false)
  
 
 	useInterval(() => {
@@ -31,6 +32,20 @@ function App() {
 	if(map_40.a_star(8, 24, updateQueue)) {
 			setIsSolving(true)
 	}
+  }
+
+  function startInstantSolve() {
+		const map_40 = new Map(graphData.nodes, graphData.edges)
+
+		if(map_40.a_star(8, 24, updateQueue) && queue.length > 0) {
+			setIsInstantSolving(true)
+			  let queueCopy = queue
+		  let edgesCopy = graph.edges
+		edgesCopy = [ ...edgesCopy, ...queueCopy ]
+		
+		network.setData({ nodes: graph.nodes, edges: edgesCopy })
+		}
+
   }
 
   function convertSpeedToMS(speed) {
@@ -73,8 +88,9 @@ function App() {
   }
 
   function resetBoard() {
-	  if(isSolving) {
+	  if(isSolving || isInstantSolving) {
 		  setIsSolving(false)
+		  setIsInstantSolving(false)
 		  let queueCopy = queue
 		  queueCopy.length = 0
 		  setQueue(queueCopy)
@@ -109,18 +125,18 @@ function App() {
 		<div className="btn-group">
           <Button
             // disabled={isSolving}
-            buttonText={isSolving ? "Reset" : "Randorm Graph"}
+            buttonText={(isSolving || isInstantSolving) ? "Reset" : "Randorm Graph"}
             onClick={resetBoard}
           />
           <Button
-            disabled={isSolving}
+            disabled={(isSolving || isInstantSolving)}
             buttonText="Solve Graph In Steps"
             onClick={startSolving}
           />
           <Button
-            disabled={isSolving}
+            disabled={(isSolving || isInstantSolving)}
             buttonText="Solve Graph Instantly"
-            // onClick={startsInstantSolve}
+            onClick={startInstantSolve}
           />
         </div>
 	</div>
