@@ -27,13 +27,13 @@ export class Map {
 		return Math.sqrt(x2_x1 + y2_y1)
 	}
 
-	getPath(explored, stop) {
-
+	getPath(explored, stop, cb) {
 		//return path tracing from goal back to start using the 'origin' param
 		let result = []
 
 		function getPathFunc(explored, stop, array = []) {
 			if(stop != null) {
+				cb(explored[stop]['origin'], explored[stop]['intersection'], 'red')
 				getPathFunc(explored, explored[stop]['origin'], array)
 				array.push(stop)
 			}
@@ -66,15 +66,16 @@ export class Map {
 		let count = 0
 		while (frontier.length) {
 			let current_intersection_dict = frontier.pop()
-			cb(current_intersection_dict['origin'], current_intersection_dict['intersection'])
 			let current_intersection = current_intersection_dict['intersection']
 
 			if(current_intersection in explored) {
 				if(current_intersection_dict['weight'] < explored[current_intersection]['weight']) {
 					explored[current_intersection] = current_intersection_dict
+					cb(current_intersection_dict['origin'], current_intersection_dict['intersection'])
 				}
 			} else {
 				explored[current_intersection] = current_intersection_dict
+				cb(current_intersection_dict['origin'], current_intersection_dict['intersection'])
 			}
 
 			for(let road of this.roads[current_intersection]) {
@@ -94,8 +95,7 @@ export class Map {
 				}
 			} 
 		}
-		console.log(this.getPath(explored, goal))
-		return this.getPath(explored, goal)
+		return this.getPath(explored, goal, cb)
 	}
 }
 

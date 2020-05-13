@@ -19,6 +19,7 @@ function App() {
 	const map_40 = new Map(graphData.nodes, graphData.edges)
 
 	if(map_40.a_star(8, 24, updateQueue)) {
+		console.log(queue)
 		const intervalNumber = setInterval(
 			() => {
 				applyChanges()
@@ -26,13 +27,13 @@ function App() {
 					clearInterval(intervalNumber)
 				}
 			},
-			4000
+			500
 		)
 	}
   }
 
-  function updateQueue(from, to) {
-	  queue.push({ from, to, color: 'yellow' })
+  function updateQueue(from, to, color = 'yellow') {
+	  queue.push({ from, to, color })
 	//   console.log("QUeue", queue)
   }
 
