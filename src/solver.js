@@ -18,8 +18,6 @@ export class Map {
 			}
 		})
 
-		console.log(this.intersections)
-		console.log(this.roads)
 	}
 
 	//helper method to calc straight line distance between two points 
@@ -45,7 +43,7 @@ export class Map {
 		return result
 	}
 
-	a_star(start, goal) {
+	a_star(start, goal, cb) {
 		if(!(start in this.intersections)) {
 			return "Start not found"
 		}
@@ -68,6 +66,7 @@ export class Map {
 		let count = 0
 		while (frontier.length) {
 			let current_intersection_dict = frontier.pop()
+			cb(current_intersection_dict['origin'], current_intersection_dict['intersection'])
 			let current_intersection = current_intersection_dict['intersection']
 
 			if(current_intersection in explored) {
@@ -95,7 +94,7 @@ export class Map {
 				}
 			} 
 		}
-
+		console.log(this.getPath(explored, goal))
 		return this.getPath(explored, goal)
 	}
 }

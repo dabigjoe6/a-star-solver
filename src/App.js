@@ -8,21 +8,41 @@ import './App.css';
 function App() {
 	let network = null
 	const [graph, setGraph] = useState(graphData)
+	const queue = []
  
 
-  function addNode() {
+  function startSolving() {
 	//   let edgesCopy = edges
 	//   edgesCopy.push({"from": 39, "to": 28, color: "yellow"})
 	//   network.setData({ nodes, edges: edgesCopy })
-	
-	  console.log(network)
+	// console.log(network)
+	const map_40 = new Map(graphData.nodes, graphData.edges)
+
+	if(map_40.a_star(8, 24, updateQueue)) {
+		const intervalNumber = setInterval(
+			() => {
+				applyChanges()
+				if(queue.length == 0) {
+					clearInterval(intervalNumber)
+				}
+			},
+			4000
+		)
+	}
   }
 
-  useEffect(() => {
-	    const map_40 = new Map(graphData.nodes, graphData.edges)
+  function updateQueue(from, to) {
+	  queue.push({ from, to, color: 'yellow' })
+	//   console.log("QUeue", queue)
+  }
 
-		console.log(map_40.a_star(8, 24))
-  }, [])
+  function applyChanges() { 
+	  console.log("Apply changes")
+	  let edgesCopy = graph.edges
+	  edgesCopy.push(queue.shift())
+	  network.setData({ nodes: graph.nodes, edges: edgesCopy })
+	  //use set interval to upload changes
+  }
 
   return (
 	  <div>
@@ -36,7 +56,7 @@ function App() {
 			//  if you want access to vis.js network api you can set the state in a parent component using this property
 		}}
 		/>
-		<button onClick={addNode}>Add Node</button>
+		<button onClick={startSolving}>Start solving</button>
 	</div>
   );
 }
