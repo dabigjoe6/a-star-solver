@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import Graph from "react-graph-vis";
 import { graphData, options } from './constants'
+import { Map } from './solver'
 import './App.css';
 
 function App() {
@@ -16,6 +17,12 @@ function App() {
 	
 	  console.log(network)
   }
+
+  useEffect(() => {
+	    const map_40 = new Map(graphData.nodes, graphData.edges)
+
+		console.log(map_40.a_star(8, 24))
+  }, [])
 
   return (
 	  <div>
