@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from 'react';
+import useInterval from './useInterval'
 import logo from './logo.svg';
 import Graph from "react-graph-vis";
-import { graphData, options } from './constants'
+import { graphData, options, defaultData } from './constants'
 import { SpeedControl, Button } from './components'
 import { Map } from './solver'
 import './App.css';
 
+const initialData = graphData
+const originalData = defaultData
+
 function App() {
-	let network = null
-	const [graph, setGraph] = useState(graphData)
-	const queue = []
+	const [network, setNetwork] = useState(null)
+	const [graph, setGraph] = useState(initialData)
+	const [queue, setQueue] = useState([]) 
 
 	const [currentSpeed, setCurrentSpeed] = useState(20)
 	const [isSolving, setIsSolving] = useState(false)
  
 
-  function startSolving() {
-	  setIsSolving(true)
-	const map_40 = new Map(graphData.nodes, graphData.edges)
+	useInterval(() => {
+		// Your custom logic here
+			applyChanges()
+		
+  		}, (isSolving && queue.length > 0) ? currentSpeed : null);
+
+  function startSolving(stop = false) {
+		const map_40 = new Map(graphData.nodes, graphData.edges)
 
 	if(map_40.a_star(8, 24, updateQueue)) {
-		const intervalNumber = setInterval(
-			() => {
-				applyChanges()
-				if(queue.length == 0) {
-					clearInterval(intervalNumber)
-					setIsSolving(false)
-				}
-			},
-			currentSpeed
-		)
+			setIsSolving(true)
 	}
   }
 
@@ -38,26 +38,59 @@ function App() {
     switch (speed) {
       case "0.5x":
         setCurrentSpeed(baseSpeed * 0.5)
+		break;
       case "1x":
         setCurrentSpeed(baseSpeed)
+		break;
       case "2x":
         setCurrentSpeed(baseSpeed * 2)
+		break;
       default:
         setCurrentSpeed(baseSpeed)
+		break;
     }
   }
 
   function updateQueue(from, to, color = 'yellow') {
-	  queue.push({ from, to, color })
-	//   console.log("QUeue", queue)
+	  let queueCopy = queue
+	  queueCopy.push({ from, to, color })
+	  setQueue(queueCopy)
   }
 
   function applyChanges() { 
-	  console.log("Apply changes")
-	  let edgesCopy = graph.edges
-	  edgesCopy.push(queue.shift())
-	  network.setData({ nodes: graph.nodes, edges: edgesCopy })
+	  if(queue.length > 0) {
+		  let queueCopy = queue
+		  let edgesCopy = graph.edges
+		edgesCopy.push(queueCopy.shift())
+		setQueue(queueCopy)
+		if(queue.length == 0) {
+			// setIsSolving(false)
+		}
+		network.setData({ nodes: graph.nodes, edges: edgesCopy })
+	  }
+	  
 	  //use set interval to upload changes
+  }
+
+  function resetBoard() {
+	  if(isSolving) {
+		  setIsSolving(false)
+		  let queueCopy = queue
+		  queueCopy.length = 0
+		  setQueue(queueCopy)
+
+		  network.setData({ nodes: [], edges: [] })
+
+		network.setData({ nodes: originalData.nodes, edges: originalData.edges })
+
+		let graphDataCopy = graph
+
+		graphDataCopy.edges.forEach((edge, index) => {
+			if(edge.hasOwnProperty('color')) {
+				edge['color'] = 'black'
+			}
+		})
+	  }
   }
 
   return (
@@ -68,7 +101,7 @@ function App() {
 		// events={events}
 		style={{ height: '85vh' }}
 		getNetwork={net => {
-			network = net
+			setNetwork(net)
 			//  if you want access to vis.js network api you can set the state in a parent component using this property
 		}}
 		/>
@@ -76,8 +109,8 @@ function App() {
 		<div className="btn-group">
           <Button
             // disabled={isSolving}
-            buttonText={isSolving ? "Restart" : "Randorm Graph"}
-            // onClick={resetBoard}
+            buttonText={isSolving ? "Reset" : "Randorm Graph"}
+            onClick={resetBoard}
           />
           <Button
             disabled={isSolving}
