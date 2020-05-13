@@ -1,0 +1,20 @@
+.speed-ctrl-container {
+	text-align: center;
+	margin: 20px;
+	color: black;
+}
+
+.speed-ctrl {
+	margin: 12px;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+.speed-ctrl-container .active {
+	background-color: black;
+	color: white;
+	padding: 10px;
+	padding-left: 12px;
+	padding-right: 12px;
+	border-radius: 50%;
+}
