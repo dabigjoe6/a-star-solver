@@ -31,7 +31,7 @@ export const options = {
 			  enabled: false
 		  }
 	  },
-	  width: 1.5
+	  width: 1.8
 	},
 	physics: {
 		enabled: false
