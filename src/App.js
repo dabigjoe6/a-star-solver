@@ -3,7 +3,7 @@ import useInterval from './useInterval'
 import logo from './logo.svg';
 import Graph from "react-graph-vis";
 import { graphData, options, defaultData } from './constants'
-import { SpeedControl, Button } from './components'
+import { SpeedControl, Button, UserInput } from './components'
 import { Map } from './solver'
 import './App.css';
 
@@ -17,6 +17,10 @@ function App() {
 
 	const [currentSpeed, setCurrentSpeed] = useState(20)
 	const [isSolving, setIsSolving] = useState(false)
+	const [isInstantSolving, setIsInstantSolving] = useState(false)
+
+	const [startNode, setStartNode] = useState(8)
+	const [endNode, setEndNode] = useState(24)
  
 
 	useInterval(() => {
@@ -28,9 +32,23 @@ function App() {
   function startSolving(stop = false) {
 		const map_40 = new Map(graphData.nodes, graphData.edges)
 
-	if(map_40.a_star(8, 24, updateQueue)) {
+	if(map_40.a_star(startNode, endNode, updateQueue)) {
 			setIsSolving(true)
 	}
+  }
+
+  function startInstantSolve() {
+		const map_40 = new Map(graphData.nodes, graphData.edges)
+
+		if(map_40.a_star(startNode, endNode, updateQueue) && queue.length > 0) {
+			setIsInstantSolving(true)
+			  let queueCopy = queue
+		  let edgesCopy = graph.edges
+		edgesCopy = [ ...edgesCopy, ...queueCopy ]
+		
+		network.setData({ nodes: graph.nodes, edges: edgesCopy })
+		}
+
   }
 
   function convertSpeedToMS(speed) {
@@ -73,8 +91,9 @@ function App() {
   }
 
   function resetBoard() {
-	  if(isSolving) {
+	  if(isSolving || isInstantSolving) {
 		  setIsSolving(false)
+		  setIsInstantSolving(false)
 		  let queueCopy = queue
 		  queueCopy.length = 0
 		  setQueue(queueCopy)
@@ -99,28 +118,29 @@ function App() {
 		graph={graph}
 		options={options}
 		// events={events}
-		style={{ height: '85vh' }}
+		style={{ height: '78vh' }}
 		getNetwork={net => {
 			setNetwork(net)
 			//  if you want access to vis.js network api you can set the state in a parent component using this property
 		}}
 		/>
 		<SpeedControl onChangeSpeed={convertSpeedToMS} />
+		<UserInput startNode={startNode} endNode={endNode} setStartNode={setStartNode} setEndNode={setEndNode} />
 		<div className="btn-group">
           <Button
             // disabled={isSolving}
-            buttonText={isSolving ? "Reset" : "Randorm Graph"}
+            buttonText={(isSolving || isInstantSolving) ? "Reset" : "Randorm Graph"}
             onClick={resetBoard}
           />
           <Button
-            disabled={isSolving}
+            disabled={(isSolving || isInstantSolving)}
             buttonText="Solve Graph In Steps"
             onClick={startSolving}
           />
           <Button
-            disabled={isSolving}
+            disabled={(isSolving || isInstantSolving)}
             buttonText="Solve Graph Instantly"
-            // onClick={startsInstantSolve}
+            onClick={startInstantSolve}
           />
         </div>
 	</div>
