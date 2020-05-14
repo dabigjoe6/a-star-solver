@@ -3,7 +3,7 @@ import useInterval from './useInterval'
 import logo from './logo.svg';
 import Graph from "react-graph-vis";
 import { graphData, options, defaultData } from './constants'
-import { SpeedControl, Button, UserInput } from './components'
+import { SpeedControl, Button, UserInput, Footer } from './components'
 import { Map } from './solver'
 import './App.css';
 
@@ -121,7 +121,7 @@ function App() {
   }, [endNode])
 
   return (
-	  <div>
+	  <div className="app-container">
 		<Graph
 		graph={graph}
 		options={options}
@@ -151,6 +151,7 @@ function App() {
             onClick={startInstantSolve}
           />
         </div>
+		<Footer />
 	</div>
   );
 }

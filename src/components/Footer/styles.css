@@ -1,0 +1,30 @@
+.footer-container {
+	display: flex;
+	width: 60vh;
+	align-self: center;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.label-wrapper {
+	margin-right: 10;
+	margin-left: 10;
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.graph-label {
+	width: 10px;
+	height: 10px;
+	margin-right: 10px
+}
+
+.explored {
+	background-color: yellow;
+}
+
+.shortest {
+	background-color: red;
+}
