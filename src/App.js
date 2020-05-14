@@ -32,7 +32,7 @@ function App() {
   function startSolving(stop = false) {
 		const map_40 = new Map(graphData.nodes, graphData.edges)
 
-	if(map_40.a_star(startNode, endNode, updateQueue)) {
+	if(map_40.a_star(startNode, endNode, updateQueue) && queue.length > 0) {
 			setIsSolving(true)
 	}
   }
@@ -112,6 +112,14 @@ function App() {
 	  }
   }
 
+  useEffect(() => {
+	  console.log(startNode)
+  }, [startNode])
+
+  useEffect(() => {
+	  console.log(endNode)
+  }, [endNode])
+
   return (
 	  <div>
 		<Graph
@@ -128,8 +136,8 @@ function App() {
 		<UserInput startNode={startNode} endNode={endNode} setStartNode={setStartNode} setEndNode={setEndNode} />
 		<div className="btn-group">
           <Button
-            // disabled={isSolving}
-            buttonText={(isSolving || isInstantSolving) ? "Reset" : "Randorm Graph"}
+            disabled={(isSolving || isInstantSolving) ? false : true}
+            buttonText={"Reset"}
             onClick={resetBoard}
           />
           <Button

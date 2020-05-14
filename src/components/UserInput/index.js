@@ -6,11 +6,11 @@ export default function UserInput({ startNode, endNode, setStartNode, setEndNode
 			<div className="user-input-wrapper">
 				<div className="user-text-input"  >
 					<p className="user-input-label">Start Node: </p>
-					<input type="text" value={startNode} onChange={(value) => setStartNode(Number(value))} />
+					<input type="text" value={startNode} onChange={(event) => setStartNode(event.target.value)} />
 				</div>
 				<div className="user-text-input" >
 					<p className="user-input-label">Goal Node: </p>
-					<input type="text" value={endNode} onChange={(value) => setEndNode(Number(value))} />
+					<input type="text" value={endNode} onChange={(event) => setEndNode(event.target.value)} />
 				</div>
 			</div>
 		</div>
