@@ -122,11 +122,12 @@ function App() {
 
   return (
 	  <div className="app-container">
+		<p>Visualize the <a href="https://en.wikipedia.org/wiki/A*_search_algorithm">A* search algorithm</a></p>
 		<Graph
 		graph={graph}
 		options={options}
 		// events={events}
-		style={{ height: '75vh' }}
+		style={{ height: '75vh', width: '100vw' }}
 		getNetwork={net => {
 			setNetwork(net)
 			//  if you want access to vis.js network api you can set the state in a parent component using this property
