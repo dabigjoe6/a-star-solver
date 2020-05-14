@@ -35,5 +35,6 @@ export const options = {
 	},
 	physics: {
 		enabled: false
-	}
+	},
+	clickToUse: true
 };

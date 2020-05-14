@@ -126,7 +126,7 @@ function App() {
 		graph={graph}
 		options={options}
 		// events={events}
-		style={{ height: '78vh' }}
+		style={{ height: '75vh' }}
 		getNetwork={net => {
 			setNetwork(net)
 			//  if you want access to vis.js network api you can set the state in a parent component using this property
