@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import useInterval from "./useInterval";
-import logo from "./logo.svg";
 import Graph from "react-graph-vis";
 import { graphData, options, defaultData } from "./constants";
 import { SpeedControl, UserInput, Footer, ActionsSection } from "./components";
@@ -31,7 +30,7 @@ function App() {
   );
 
   function startSolving(stop = false) {
-    const map_40 = new Map(graphData.nodes, graphData.edges);
+    const map_40 = new Map(graphData.nodes, graphData.edges); //creates a map of 40 nodes
 
     if (map_40.a_star(startNode, endNode, updateQueue) && queue.length > 0) {
       setIsSolving(true);
@@ -81,7 +80,7 @@ function App() {
       let edgesCopy = graph.edges;
       edgesCopy.push(queueCopy.shift());
       setQueue(queueCopy);
-      if (queue.length == 0) {
+      if (queue.length === 0) {
         // setIsSolving(false)
       }
       network.setData({ nodes: graph.nodes, edges: edgesCopy });
@@ -127,7 +126,6 @@ function App() {
         style={{ height: "75vh", width: "100vw" }}
         getNetwork={(net) => {
           setNetwork(net);
-          //  if you want access to vis.js network api you can set the state in a parent component using this property
         }}
       />
       <SpeedControl onChangeSpeed={convertSpeedToMS} />
